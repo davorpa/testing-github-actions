@@ -61,10 +61,8 @@ jobs:
           node-version:    ${{ matrix.node_version }}
           architecture:    ${{ matrix.architecture }}
         
-      - name: Output
-        run: |
-          echo "========================="
-          node --version && npm --version
-          #echo "Updating npm..."
-          #npm install -g npm && npm --version
-          echo "========================="
+      - name: Output node - npm
+        run: node --version && npm --version
+      
+      - name: Upgrade npm
+        run: npm install -g npm && npm --version
