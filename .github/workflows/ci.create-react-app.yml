@@ -61,7 +61,7 @@ jobs:
           node-version:    ${{ matrix.node_version }}
           architecture:    ${{ matrix.architecture }}
 #          check-latest:    true
-          cache:           'npm'
+#          cache:           'npm'
         
       - name: Output node - npm
         run: node --version && npm --version
