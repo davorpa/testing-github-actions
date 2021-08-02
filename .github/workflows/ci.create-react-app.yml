@@ -50,13 +50,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Using node-${{ matrix.node_version }}-${{ matrix.architecture }} on ${{ matrix.os }}
+      - name: Node ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
         uses: actions/setup-node@v1
         with:
           node-version:    ${{ matrix.node_version }}
           architecture:    ${{ matrix.architecture }}
         
-      - name: Echo environment
+      - name: Output
         run: |
           echo "============================="
           node --version && npm --version
