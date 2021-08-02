@@ -43,15 +43,18 @@ jobs:
           - 12.x
           - 14.x
           - 16.x
+        architecture:
+          - x64
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Using node-${{ matrix.node_version }} on ${{ matrix.os }}
+      - name: Using node-${{ matrix.node_version }}-${{ matrix.architecture }} on ${{ matrix.os }}
         uses: actions/setup-node@v1
         with:
           node-version:    ${{ matrix.node_version }}
+          architecture:    ${{ matrix.architecture }}
         
       - name: Echo environment
         run: |
