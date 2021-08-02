@@ -1,0 +1,71 @@
+name: CI/CD. Create React App
+
+on:
+  push:
+    branches:
+      # matches every branch that doesn't contain a '/'
+#      - '*'
+      # matches every branch containing a single '/'
+#      - '*/*'
+      # matches every branch
+      - '**'
+      # excludes master
+#      - '!master'
+      # includes one
+#      - 'create-react-app"
+    paths:
+      # Include this workflow
+      - .github/workflows/ci.create-react-app.yml
+      # Include target folder
+      - 'create-react-app/**'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - '.github/workflows/ci.create-react-app.yml'
+      - 'create-react-app/**'
+  # manual dispatch
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    name:    Build. Create React App
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+          - ubuntu-latest
+          - windows-latest
+        architecture:
+          - x64
+        node_version:
+          - 10.x
+          - 12.x
+          - 14.x
+          - 16.x
+        # an extra windows-x86 run:
+        include:
+          - os:              windows-2016
+            node_version:    12
+            architecture:    x86
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Use NodeJS ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
+        uses: actions/setup-node@v1
+        with:
+          node-version:    ${{ matrix.node_version }}
+          architecture:    ${{ matrix.architecture }}
+      
+      - name: Echo environment
+        run: |
+          echo "============================="
+          node --version && npm --version
+          #echo "Updating npm..."
+          #npm install -g npm && npm --version
+          echo "============================="
