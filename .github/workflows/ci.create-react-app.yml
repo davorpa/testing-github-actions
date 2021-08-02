@@ -12,10 +12,10 @@ on:
       # excludes master
 #      - '!master'
       # includes one
-#      - 'create-react-app"
+#      - 'create-react-app'
     paths:
       # Include this workflow
-      - .github/workflows/ci.create-react-app.yml
+      - '.github/workflows/ci.create-react-app.yml'
       # Include target folder
       - 'create-react-app/**'
   pull_request:
@@ -39,29 +39,20 @@ jobs:
           - ubuntu-20.04
           - ubuntu-latest
           - windows-latest
-        architecture:
-          - x64
         node_version:
-          - 10.x
           - 12.x
           - 14.x
           - 16.x
-        # an extra windows-x86 run:
-        include:
-          - os:              windows-2016
-            node_version:    12
-            architecture:    x86
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Use NodeJS ${{ matrix.node_version }} - ${{ matrix.architecture }} on ${{ matrix.os }}
+      - name: Using node-${{ matrix.node_version }} on ${{ matrix.os }}
         uses: actions/setup-node@v1
         with:
           node-version:    ${{ matrix.node_version }}
-          architecture:    ${{ matrix.architecture }}
-      
+        
       - name: Echo environment
         run: |
           echo "============================="
