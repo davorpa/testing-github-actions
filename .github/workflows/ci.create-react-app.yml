@@ -60,7 +60,7 @@ jobs:
         with:
           node-version:    ${{ matrix.node_version }}
           architecture:    ${{ matrix.architecture }}
-#          check-latest:    true
+          check-latest:    true
           # zero-config caching available using setup-node@v2
 #          cache:           'npm'
         
