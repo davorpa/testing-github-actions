@@ -82,11 +82,23 @@ jobs:
         run:  |
           echo "::set-output name=dir::$(npm config get cache)"
       
+      - name: Handle npm cache
+        uses: actions/cache@v2
+        # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
+        id:   npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Print npm cache status
         env:
           NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.dir }}
+          NPM_CACHE_HIT: ${{ steps.npm-cache.outputs.cache-hit }}
           RUNNER_OSPLAT: ${{ runner.os }}
         run: |
           echo $RUNNER_OSPLAT
           echo $NPM_CACHE_DIR
+          echo $NPM_CACHE_HIT
         shell: bash
