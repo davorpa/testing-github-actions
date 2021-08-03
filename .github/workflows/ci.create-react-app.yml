@@ -68,12 +68,12 @@ jobs:
         run: node --version
       - name: Print npm version
         run: npm --version
-      - name: Upgrade npm
-        run:  npm install -g npm
-      - name: Print node version
-        run: node --version
-      - name: Print npm version
-        run: npm --version
+#      - name: Upgrade npm
+#        run:  npm install -g npm
+#      - name: Print node version
+#        run: node --version
+#      - name: Print npm version
+#        run: npm --version
       
       # Always after setup node/npm or use `actions/setup-node.with.cache: 'npm'`
       # verbose caching if using `actions/setup-node@v1`
