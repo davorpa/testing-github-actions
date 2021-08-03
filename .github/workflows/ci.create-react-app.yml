@@ -88,6 +88,5 @@ jobs:
           NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.dir }}
           RUNNER_OSPLAT: ${{ runner.os }}
         run: |
-          echo
           echo $RUNNER_OSPLAT
           echo $NPM_CACHE_DIR
