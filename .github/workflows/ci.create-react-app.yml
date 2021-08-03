@@ -82,3 +82,10 @@ jobs:
         run:  |
           echo "::set-output name=dir::$(npm config get cache)"
       
+      - name: Print npm cache status
+        run: |
+          echo ${RUNNER_OSPLAT}
+          echo ${NPM_CACHE_DIR}
+        env:
+          NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.dir }}
+          RUNNER_OSPLAT: ${{ runner.os }}
