@@ -86,7 +86,7 @@ jobs:
         env:
           NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.dir }}
           RUNNER_OSPLAT: ${{ runner.os }}
-        if: ${{ !startsWith(runner.os, 'Windows') }}
         run: |
           echo $RUNNER_OSPLAT
           echo $NPM_CACHE_DIR
+        shell: bash
