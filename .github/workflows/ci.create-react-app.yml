@@ -19,6 +19,7 @@ on:
       # Include target folder
       - 'my-created-react-app/**'
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - '**'
     paths:
