@@ -117,18 +117,12 @@ jobs:
       - name: Init React app project
         run: npx create-react-app my-created-react-app --use-npm
 
-      - name: List status
-        working-directory: ./my-create-react-app
-        run: |
-          ls
-          git status
+      - name: Git status
+        run: git status
  
       - name: Build React app project
         working-directory: ./my-create-react-app
         run: npm ci
 
-      - name: List status
-        working-directory: ./my-create-react-app
-        run: |
-          ls
-          git status
+      - name: Git status
+        run: git status
