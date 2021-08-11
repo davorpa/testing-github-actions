@@ -114,4 +114,4 @@ jobs:
       - name: Build React app project
         run: npm run build
 
-        run: ls -lAhRs --color
+      - run: ls -lAhRs --color
