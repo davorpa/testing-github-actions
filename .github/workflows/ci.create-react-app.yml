@@ -44,13 +44,14 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-20.04
-          - ubuntu-latest
+          - ubuntu-18.04
+#          - ubuntu-20.04
+#          - ubuntu-latest
           - windows-latest
         node_version:
-          - 12.x
+#          - 12.x
           - 14.x
-          - 16.x
+#          - 16.x
         architecture:
           - x64
         # an extra windows-x86 run:
@@ -114,17 +115,25 @@ jobs:
           echo $NPM_CACHE_HIT
         shell: bash
 
+      - run: |
+          cd
+          git status
+
       - name: Init React app project
+        run: npx create-react-app my-created-react-app --use-npm
+
+      - name: Git status
         run: |
-          npx create-react-app my-created-react-app --use-npm
-          cd my-created-react-app
-
-      - name: Git status
-        run: git status
+          cd
+          git status
+        shell: bash
  
-      - name: Build React app project
-        working-directory: ./my-create-react-app
-        run: npm ci
+#      - name: Build React app project
+#        working-directory: ./my-created-react-app
+#        run: npm ci
 
-      - name: Git status
-        run: git status
+#      - name: Git status
+#        run: |
+#          cd
+#          git status
+#        shell: bash
