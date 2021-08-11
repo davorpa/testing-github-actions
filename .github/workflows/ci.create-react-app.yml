@@ -29,7 +29,7 @@ on:
 
 
 jobs:
-  
+
   avoid_reduncy:
     runs-on: ubuntu-18.04
     steps:
@@ -39,8 +39,9 @@ jobs:
           access_token: ${{ github.token }}
 
   build:
+    name: Node ${{ matrix.node_version }} ${{ matrix.architecture }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    
+
     strategy:
       matrix:
         os:
@@ -59,12 +60,11 @@ jobs:
           - os: windows-2016
             node_version: 12
             architecture: x86
-    
-    name: Node ${{ matrix.node_version }} ${{ matrix.architecture }} on ${{ matrix.os }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
+
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -91,7 +91,7 @@ jobs:
         id:   npm-cache-dir
         run:  |
           echo "::set-output name=dir::$(npm config get cache)"
-      
+
       - name: Handle npm cache
         uses: actions/cache@v2
         # use this to check for `cache-hit` ==> if: steps.npm-cache.outputs.cache-hit != 'true'
@@ -114,7 +114,7 @@ jobs:
           echo $NPM_CACHE_DIR
           echo $NPM_CACHE_HIT
         shell: bash
-       
+
       - name: cwd
         uses: actions/github-script@v4
         with:
@@ -124,9 +124,9 @@ jobs:
             console.log("path: ", path.resolve('.'));
             console.log("CWD:  ", process.cwd());
 
-       - run: |
-          cd
-          cd ./
+#       - run: |
+#          cd
+#          cd ./
 #          git status
 
       - name: Init React app project
