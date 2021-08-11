@@ -124,7 +124,8 @@ jobs:
             console.log("path: ", path.resolve('.'));
             console.log("CWD:  ", process.cwd());
 
-#       - run: |
+       - run: |
+           echo "$(cd)"
 #          cd
 #          cd ./
 #          git status
@@ -134,9 +135,9 @@ jobs:
 
       - name: Git status
         run: |
-#          cd
+          echo "$(cd)"
           git status
-#        shell: bash
+        shell: bash
  
 #      - name: Build React app project
 #        working-directory: ./my-created-react-app
