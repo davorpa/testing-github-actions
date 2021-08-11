@@ -123,11 +123,11 @@ jobs:
 #      - name: Init React app project
 #        run: npx create-react-app my-created-react-app --use-npm
 
-      - name: Git status
-        run: |
-          cd
-          git status
-        shell: bash
+#      - name: Git status
+#        run: |
+#          cd
+#          git status
+#        shell: bash
  
 #      - name: Build React app project
 #        working-directory: ./my-created-react-app
