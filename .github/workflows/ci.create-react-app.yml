@@ -38,9 +38,12 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-  build:
+  build-created-react-app:
     name: Node ${{ matrix.node_version }} ${{ matrix.architecture }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    
+    env:
+      - working-directory: ./my-created-react-app
 
     strategy:
       matrix:
@@ -62,6 +65,15 @@ jobs:
 #            architecture: x86
 
     steps:
+      - name: Echo. Cwd - Working Directory
+        uses: actions/github-script@v4
+        with:
+          result-encoding: string
+          script: |
+            const path = require('path');
+            console.log("path: ", path.resolve('.'));
+            console.log("CWD:  ", process.cwd());
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -74,15 +86,15 @@ jobs:
           # zero-config caching available using setup-node@v2
 #          cache:           'npm'
         
-      - name: Print node version
+      - name: Echo. node version
         run: node --version
-      - name: Print npm version
+      - name: Echo. npm version
         run: npm --version
 #      - name: Upgrade npm
 #        run:  npm install -g npm
-#      - name: Print node version
+#      - name: Echo. node version
 #        run: node --version
-#      - name: Print npm version
+#      - name: Echo. npm version
 #        run: npm --version
       
       # Always after setup node/npm or use `actions/setup-node.with.cache: 'npm'`
@@ -104,7 +116,7 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
 
-      - name: Print npm cache status
+      - name: Echo. npm cache status
         env:
           NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.dir }}
           NPM_CACHE_HIT: ${{ steps.npm-cache.outputs.cache-hit }}
@@ -115,43 +127,28 @@ jobs:
           echo $NPM_CACHE_DIR
           echo $NPM_CACHE_HIT
 
-      - name: cwd
-        uses: actions/github-script@v4
-        with:
-          result-encoding: string
-          script: |
-            const path = require('path');
-            console.log("path: ", path.resolve('.'));
-            console.log("CWD:  ", process.cwd());
-
-      - name: Git status
-        run: |
-          echo "$(cd)"
-          git status
-          echo "$(cd)"
-          ls -lAoghi1
+      - name: Echo. Git status
+        run: git status
+      - name: Echo. List cwd folder
+        run: ls -lAoghi1
 
       - name: Init React app project
         run: npx create-react-app my-created-react-app --use-npm
 
-      - name: Git status
-        shell: bash
-        run: |
-          echo "$(cd)"
-          git status
-          echo "$(cd)"
-          ls
-          ls -laoghi1 my-created-react-app
- 
+      - name: Echo. Git status
+        run: git status
+      - name: Echo. List CWD folder
+        run: ls -lAoghi1
+      - name Echo. List folder ${{ env.working-directory }}
+        working-directory: ${{ env.working-directory }}
+        run: ls -lAoghi1
+
 #      - name: Build React app project
-#        working-directory: ./my-created-react-app
+#        working-directory: ${{ env.working-directory }}
 #        run: npm ci
 
-      - name: Git status
-        shell: bash
-        run: |
-          echo "$(cd)"
-          git status
-          echo "$(cd)"
-          ls
-          ls -laoghi1 my-created-react-app
+      - name: Echo. Git status
+        run: git status
+      - name Echo. List folder ${{ env.working-directory }}
+        working-directory: ${{ env.working-directory }}
+        run: ls -lAoghi1
