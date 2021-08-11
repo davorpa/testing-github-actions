@@ -119,6 +119,16 @@ jobs:
           cd
           cd ./
 #          git status
+       
+      - name: cwd script
+        uses: actions/github-script@v4
+        with:
+          script: |
+            const path = require('path');
+            console.log("__dirname:  ", __dirname);
+            console.log("__filename: ", __filename);
+            console.log("path: ", path.resolve('.'));
+            console.log("CWD:  ", process.cwd());
 
 #      - name: Init React app project
 #        run: npx create-react-app my-created-react-app --use-npm
