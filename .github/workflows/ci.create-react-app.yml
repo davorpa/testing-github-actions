@@ -43,7 +43,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     
     env:
-      - working-directory: ./my-created-react-app
+      working-directory: ./my-created-react-app
 
     strategy:
       matrix:
