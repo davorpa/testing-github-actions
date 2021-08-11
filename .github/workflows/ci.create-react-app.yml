@@ -129,7 +129,7 @@ jobs:
           echo "$(cd)"
           git status
           echo "$(cd)"
-          ls -lAoghis1
+          ls -lAoghi1
 
       - name: Init React app project
         run: npx create-react-app my-created-react-app --use-npm
@@ -140,7 +140,7 @@ jobs:
           git status
           echo "$(cd)"
           ls
-          ls -la my-created-react-app
+          ls -laoghi1 my-created-react-app
         shell: bash
  
 #      - name: Build React app project
