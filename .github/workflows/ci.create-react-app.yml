@@ -124,8 +124,8 @@ jobs:
             console.log("path: ", path.resolve('.'));
             console.log("CWD:  ", process.cwd());
 
-       - run: |
-           echo "$(cd)"
+#       - run: |
+#           echo "$(cd)"
 #          cd
 #          cd ./
 #          git status
