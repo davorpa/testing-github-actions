@@ -48,18 +48,18 @@ jobs:
           - ubuntu-18.04
 #          - ubuntu-20.04
 #          - ubuntu-latest
-          - windows-latest
+#          - windows-latest
         node_version:
 #          - 12.x
           - 14.x
 #          - 16.x
         architecture:
           - x64
-        # an extra windows-x86 run:
-        include:
-          - os: windows-2016
-            node_version: 12
-            architecture: x86
+#        # an extra windows-x86 run:
+#        include:
+#          - os: windows-2016
+#            node_version: 12
+#            architecture: x86
 
     steps:
       - name: Checkout repository
@@ -124,11 +124,11 @@ jobs:
             console.log("path: ", path.resolve('.'));
             console.log("CWD:  ", process.cwd());
 
-#       - run: |
-#           echo "$(cd)"
-#          cd
-#          cd ./
-#          git status
+      - name: Git status
+        run: |
+          echo "$(cd)"
+          git status
+          ls
 
       - name: Init React app project
         run: npx create-react-app my-created-react-app --use-npm
