@@ -129,7 +129,7 @@ jobs:
 
       - name: Echo. Git status
         run: git status
-      - name: Echo. List cwd folder
+      - name: Echo. List CWD folder
         run: ls -lAoghi1
 
       - name: Init React app project
@@ -139,7 +139,7 @@ jobs:
         run: git status
       - name: Echo. List CWD folder
         run: ls -lAoghi1
-      - name Echo. List folder ${{ env.working-directory }}
+      - name: Echo. List folder ${{ env.working-directory }}
         working-directory: ${{ env.working-directory }}
         run: ls -lAoghi1
 
@@ -149,6 +149,6 @@ jobs:
 
       - name: Echo. Git status
         run: git status
-      - name Echo. List folder ${{ env.working-directory }}
+      - name: Echo. List folder ${{ env.working-directory }}
         working-directory: ${{ env.working-directory }}
         run: ls -lAoghi1
