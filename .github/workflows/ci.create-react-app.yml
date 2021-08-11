@@ -108,10 +108,12 @@ jobs:
       - name: Init React app project
         run: npx create-react-app my-created-react-app --use-npm
 
-      - run: cd my-create-react-app
       - run: ls -lAhRs --color
+        working-directory: ./my-create-react-app
 
       - name: Build React app project
-        run: npm run build
+        run: npm ci
+        working-directory: ./my-create-react-app
 
       - run: ls -lAhRs --color
+        working-directory: ./my-create-react-app
