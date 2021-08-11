@@ -109,11 +109,11 @@ jobs:
           NPM_CACHE_DIR: ${{ steps.npm-cache-dir.outputs.dir }}
           NPM_CACHE_HIT: ${{ steps.npm-cache.outputs.cache-hit }}
           RUNNER_OSPLAT: ${{ runner.os }}
+        shell: bash
         run: |
           echo $RUNNER_OSPLAT
           echo $NPM_CACHE_DIR
           echo $NPM_CACHE_HIT
-        shell: bash
 
       - name: cwd
         uses: actions/github-script@v4
@@ -135,20 +135,23 @@ jobs:
         run: npx create-react-app my-created-react-app --use-npm
 
       - name: Git status
+        shell: bash
         run: |
           echo "$(cd)"
           git status
           echo "$(cd)"
           ls
           ls -laoghi1 my-created-react-app
-        shell: bash
  
 #      - name: Build React app project
 #        working-directory: ./my-created-react-app
 #        run: npm ci
 
-#      - name: Git status
-#        run: |
-#          cd
-#          git status
-#        shell: bash
+      - name: Git status
+        shell: bash
+        run: |
+          echo "$(cd)"
+          git status
+          echo "$(cd)"
+          ls
+          ls -laoghi1 my-created-react-app
