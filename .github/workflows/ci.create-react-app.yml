@@ -129,7 +129,7 @@ jobs:
           echo "$(cd)"
           git status
           echo "$(cd)"
-          ls -lAogh
+          ls -lAoghis1
 
       - name: Init React app project
         run: npx create-react-app my-created-react-app --use-npm
