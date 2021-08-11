@@ -114,27 +114,28 @@ jobs:
           echo $NPM_CACHE_DIR
           echo $NPM_CACHE_HIT
         shell: bash
-
-      - run: |
-          cd
-          cd ./
-#          git status
        
-      - name: cwd script
+      - name: cwd
         uses: actions/github-script@v4
         with:
+          result-encoding: string
           script: |
             const path = require('path');
             console.log("path: ", path.resolve('.'));
             console.log("CWD:  ", process.cwd());
 
-#      - name: Init React app project
-#        run: npx create-react-app my-created-react-app --use-npm
-
-#      - name: Git status
-#        run: |
-#          cd
+       - run: |
+          cd
+          cd ./
 #          git status
+
+      - name: Init React app project
+        run: npx create-react-app my-created-react-app --use-npm
+
+      - name: Git status
+        run: |
+#          cd
+          git status
 #        shell: bash
  
 #      - name: Build React app project
