@@ -140,6 +140,7 @@ jobs:
           git status
           echo "$(cd)"
           ls
+          ls -la my-created-react-app
         shell: bash
  
 #      - name: Build React app project
