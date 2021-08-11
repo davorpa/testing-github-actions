@@ -12,18 +12,18 @@ on:
       # excludes master
 #      - '!master'
       # includes one
-#      - 'create-react-app'
+#      - 'my-created-react-app'
     paths:
       # Include this workflow
       - '.github/workflows/ci.create-react-app.yml'
       # Include target folder
-      - 'create-react-app/**'
+      - 'my-created-react-app/**'
   pull_request:
     branches:
       - '**'
     paths:
       - '.github/workflows/ci.create-react-app.yml'
-      - 'create-react-app/**'
+      - 'my-created-react-app/**'
   # manual dispatch
   workflow_dispatch:
 
@@ -104,3 +104,14 @@ jobs:
           echo $NPM_CACHE_DIR
           echo $NPM_CACHE_HIT
         shell: bash
+
+      - name: Init React app project
+        run: npx create-react-app my-created-react-app --use-npm
+
+        run: cd my-create-react-app
+        run: ls -lAhRs --color
+
+      - name: Build React app project
+        run: npm run build
+
+        run: ls -lAhRs --color
