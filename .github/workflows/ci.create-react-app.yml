@@ -115,7 +115,9 @@ jobs:
         shell: bash
 
       - name: Init React app project
-        run: npx create-react-app my-created-react-app --use-npm
+        run: |
+          npx create-react-app my-created-react-app --use-npm
+          cd my-created-react-app
 
       - name: Git status
         run: git status
