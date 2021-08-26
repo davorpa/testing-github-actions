@@ -33,7 +33,6 @@ on:
 #    shell: bash
 #    working-directory: my-created-react-app
 
-
 jobs:
 
   avoid_reduncy:
