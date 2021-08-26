@@ -72,7 +72,7 @@ jobs:
 
   print-repo-name-so:
     name: reponame (via github ctx ::set-output)
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch repository name
         id: repository-name
@@ -86,7 +86,7 @@ jobs:
 
   print-repo-name-se:
     name: reponame (via GITHUB_* ::set-env)
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch repository name
         # DEPRECATED!!! https://github.blog/changelog/2020-10-01-github-actions-deprecating-set-env-and-add-path-commands/
@@ -101,7 +101,7 @@ jobs:
 
   print-repo-name-cre:
     name: reponame (via github.* ctx + GITHUB_ENV append)
-    run-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Fetch repository name
         run: echo "GH_REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')" >> $GITHUB_ENV
