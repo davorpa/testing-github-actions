@@ -51,20 +51,20 @@ jobs:
           GH_EVENT_REPOSITORY: ${{ github.event.repository }}
           GH_JSON_EVENT: ${{ toJSON( github.event ) }}
         run: |
-          echo -e "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
-          echo ".."
-          echo -e "GH_REPOSITORY: $GH_REPOSITORY"
-          echo ".."
-          echo -e "GH_EVENT_REPOSITORY: $GH_EVENT_REPOSITORY"
-          echo ".."
+          echo -e "GITHUB_REPOSITORY> $GITHUB_REPOSITORY"
+          echo "..."
+          echo -e "GH_REPOSITORY> $GH_REPOSITORY"
+          echo "..."
+          echo -e "GH_EVENT_REPOSITORY> $GH_EVENT_REPOSITORY"
+          echo "..."
           echo -e "$GH_JSON_EVENT"
       - name: Echo. JSON event data (as var)
         run: |
-          echo -e "GITHUB_REPOSITORY: ${{ github.repository }}"
-          echo ".."
-          echo -e "GITHUB_EVENT_REPOSITORY: $${{ github.event.repository }}"
-          echo ".."
-          echo -e "$${{ github.event }}"
+          echo -e "GITHUB_REPOSITORY> ${{ github.repository }}"
+          echo "..."
+          echo -e "GITHUB_EVENT_REPOSITORY> ${{ github.event.repository }}"
+          echo "..."
+          echo -e "${{ github.event }}"
   
 #
 # use output variables should be the prefered way
