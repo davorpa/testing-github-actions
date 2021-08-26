@@ -48,21 +48,16 @@ jobs:
         # NOTE: `github.event` does not seem to be populated when an action is run `on.schedule`
         env:
           GH_REPOSITORY: ${{ github.repository }}
-          GH_EVENT_REPOSITORY: ${{ github.event.repository }}
           GH_JSON_EVENT: ${{ toJSON( github.event ) }}
         run: |
           echo -e "GITHUB_REPOSITORY> $GITHUB_REPOSITORY"
           echo "..."
           echo -e "GH_REPOSITORY> $GH_REPOSITORY"
           echo "..."
-          echo -e "GH_EVENT_REPOSITORY> $GH_EVENT_REPOSITORY"
-          echo "..."
           echo -e "$GH_JSON_EVENT"
       - name: Echo. JSON event data (as var)
         run: |
           echo -e "GITHUB_REPOSITORY> ${{ github.repository }}"
-          echo "..."
-          echo -e "GITHUB_EVENT_REPOSITORY> ${{ github.event.repository }}"
           echo "..."
           echo -e "${{ github.event }}"
   
