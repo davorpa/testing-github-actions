@@ -28,6 +28,11 @@ on:
   # manual dispatch
   workflow_dispatch:
 
+#defaults:
+#  run:
+#    shell: bash
+#    working-directory: my-created-react-app
+
 
 jobs:
 
