@@ -1,0 +1,73 @@
+name: Print GitHub event data / repo name
+
+on:
+  push:
+    paths:
+      # Include this workflow
+      - '.github/workflows/print-events-repo-name.yml'
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '.github/workflows/print-events-repo-name.yml'
+  # manual dispatch
+  workflow_dispatch:
+
+
+jobs:
+
+  avoid_reduncy:
+    name: Cancel Previous Pipelines
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Workflows
+        uses: styfle/cancel-workflow-action@0.9.1
+        with:
+          access_token: ${{ github.token }}
+
+  print-cwd:
+    name: Print CWD
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo. Cwd - Working Directory
+        uses: actions/github-script@v4
+        with:
+          result-encoding: string
+          script: |
+            const path = require('path');
+            console.log("path: ", path.resolve('.'));
+            console.log("CWD:  ", process.cwd());
+
+      - name: Echo. List CWD folder
+        run: ls -lAoghi1
+
+  print:
+    name: Print ghern
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo. JSON event data
+        # NOTE: `github.event` does not seem to be populated when an action is run `on.schedule`
+        env:
+          GH_JSONEVENT: ${{ toJSON( github.event ) }}
+        run: echo -ne "$GH_JSONEVENT"
+      - run: echo -ne "${{ toJSON( github.event ) }}"
+
+      - name: Echo. Github Event Data
+        run: |
+          echo -ne "${{ github.repository }}"
+          echo -ne "$${{ github.event }}"
+        
+      - name: Extract GH_REPOSITORY_NAME (via GITHUB_* + set-env)
+        run: echo ::set-env name=GH_REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
+      - name: Echo. GH_REPOSITORY_NAME (from set-env)
+        run: |
+          echo -ne "$GH_REPOSITORY_NAME"
+          echo -ne "${{ env.GH_REPOSITORY_NAME }}"
+
+      - name: Extract GH_REPOSITORY_NAME (via github.* ctx + GITHUB_ENV append)
+        run: echo "REPO_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')" >> $GITHUB_ENV
+#        shell: bash
+      - name: Echo. GH_REPOSITORY_NAME (from GITHUB_ENV redir)
+        run: |
+          echo -ne "$GH_REPO_NAME"
+          echo -ne "${{ env.GH_REPO_NAME }}"
+        
