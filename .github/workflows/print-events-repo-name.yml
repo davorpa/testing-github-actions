@@ -28,7 +28,7 @@ jobs:
     name: Print CWD
     runs-on: ubuntu-latest
     steps:
-      - name: Echo. Cwd - Working Directory
+      - name: Cwd - Working Directory
         uses: actions/github-script@v4
         with:
           result-encoding: string
@@ -37,45 +37,76 @@ jobs:
             console.log("path: ", path.resolve('.'));
             console.log("CWD:  ", process.cwd());
 
-      - name: Echo. List CWD folder
+      - name: List CWD folder
         run: ls -lAoghi1
 
-  print:
-    name: Print GH event + repo name
+  print-gh-event:
+    name: Print GH event
     runs-on: ubuntu-latest
     steps:
       - name: Echo. JSON event data (as env)
         # NOTE: `github.event` does not seem to be populated when an action is run `on.schedule`
         env:
-          GH_JSONEVENT: ${{ toJSON( github.event ) }}
-        run: echo -ne "$GH_JSONEVENT"
-      - name: Echo. JSON event data (as var)
-        run: echo -ne "${{ toJSON( github.event ) }}"
-
-      - name: Echo. Github Event Data
+          GH_REPOSITORY: ${{ github.repository }}
+          GH_EVENT_REPOSITORY: ${{ github.event.repository }}
+          GH_JSON_EVENT: ${{ toJSON( github.event ) }}
         run: |
-          echo -ne "${{ github.repository }}"
-          echo "....."
-          echo "....."
-          echo -ne "$${{ github.event }}"
-        
-      - name: Extract GH_REPOSITORY_NAME (via GITHUB_* + set-env)
-        # DEPRECATED!!!
+          echo -e "GITHUB_REPOSITORY: $GITHUB_REPOSITORY"
+          echo ".."
+          echo -e "GH_REPOSITORY: $GH_REPOSITORY"
+          echo ".."
+          echo -e "GH_EVENT_REPOSITORY: $GH_EVENT_REPOSITORY"
+          echo ".."
+          echo -e "$GH_JSON_EVENT"
+      - name: Echo. JSON event data (as var)
+        run: |
+          echo -e "GITHUB_REPOSITORY: ${{ github.repository }}"
+          echo ".."
+          echo -e "GITHUB_EVENT_REPOSITORY: $${{ github.event.repository }}"
+          echo ".."
+          echo -e "$${{ github.event }}"
+  
+#
+# use output variables should be the prefered way
+#
+
+  print-repo-name-so:
+    name: reponame (via github ctx ::set-output)
+    run-on: ubuntu-latest
+    steps:
+      - name: Fetch repository name
+        id: repository-name
+        run: echo "::set-output name=value::$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')"
+      - name: Print
+        env:
+          GH_REPOSITORY_NAME: ${{ steps.repository-name.outputs.value }}
+        run: |
+          echo -e "$GH_REPOSITORY_NAME"
+          echo -e "${{ steps.repository-name.outputs.value }}"
+
+  print-repo-name-se:
+    name: reponame (via GITHUB_* ::set-env)
+    run-on: ubuntu-latest
+    steps:
+      - name: Fetch repository name
+        # DEPRECATED!!! https://github.blog/changelog/2020-10-01-github-actions-deprecating-set-env-and-add-path-commands/
         # Error: The `set-env` command is disabled. Please upgrade to using Environment Files or opt into unsecure command execution by setting the `ACTIONS_ALLOW_UNSECURE_COMMANDS` environment variable to `true`.
-        # For more information see: https://github.blog/changelog/2020-10-01-github-actions-deprecating-set-env-and-add-path-commands/
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: ${{ true }}
-        run: echo ::set-env name=GH_REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e "s/:refs//")
-      - name: Echo. GH_REPOSITORY_NAME (from set-env)
+        run: echo "::set-env name=GH_REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e 's/:refs//')"
+      - name: Print
         run: |
-          echo -ne "$GH_REPOSITORY_NAME"
-          echo -ne "${{ env.GH_REPOSITORY_NAME }}"
+          echo -e "$GH_REPOSITORY_NAME"
+          echo -e "${{ env.GH_REPOSITORY_NAME }}"
 
-      - name: Extract GH_REPOSITORY_NAME (via github.* ctx + GITHUB_ENV append)
-        run: echo "REPO_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')" >> $GITHUB_ENV
+  print-repo-name-cre:
+    name: reponame (via github.* ctx + GITHUB_ENV append)
+    run-on: ubuntu-latest
+    steps:
+      - name: Fetch repository name
+        run: echo "GH_REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')" >> $GITHUB_ENV
 #        shell: bash
-      - name: Echo. GH_REPOSITORY_NAME (from GITHUB_ENV redir)
+      - name: Print
         run: |
-          echo -ne "$GH_REPO_NAME"
-          echo -ne "${{ env.GH_REPO_NAME }}"
-        
+          echo -e "$GH_REPOSITORY_NAME"
+          echo -e "${{ env.GH_REPOSITORY_NAME }}"
