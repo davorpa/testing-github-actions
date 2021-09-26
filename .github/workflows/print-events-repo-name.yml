@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cwd - Working Directory
-        uses: actions/github-script@v4
+        uses: actions/github-script@v5
         with:
           result-encoding: string
           script: |
