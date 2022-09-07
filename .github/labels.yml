@@ -40,3 +40,11 @@
 - name: "github-actions"
   description: "Affected resources are part of some GitHub Actions workflow"
   color: "0052cc"
+
+#
+# issues-pinner.yml
+#
+
+- name: "📌 pinned"
+  description: "Issues that are pinned currently"
+  color: "0e8a16"
