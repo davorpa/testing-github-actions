@@ -1,0 +1,85 @@
+# This file is maintained in https://github.com/davorpatech/meta/
+name: Synchronize repo labels
+
+on:
+  push:                                     # when push this files to branches....
+    branches:
+      - 'main'
+    paths:
+      - '.github/labels.yml'                #     - definition file
+      - '.github/workflows/sync-labels.yml' #     - this workflow
+  pull_request:                             # when pull over this files to branches...
+    branches:
+      - 'main'
+    paths:
+      - '.github/labels.yml'                #     - definition file
+      - '.github/workflows/sync-labels.yml' #     - this workflow
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        type: boolean
+        description: 'If enabled, changes will not be applied'
+        required: true
+        default: true
+      skip-delete:
+        type: boolean
+        description: 'If enabled, labels will not be deleted if not found in YAML file'
+        required: true
+        default: true
+
+permissions:
+  # needed for checkout code
+  contents: read
+#
+# Note about permissions in "crazy-max/ghaction-github-labeler"...
+# - for list/read labels we need "issues: read". Use in conjunction with "dry-run=true"
+# - for a complete CRUD we need "issues: write"
+#
+# TODO: change scope to "labels: write" when available (see planned https://github.com/community/community/discussions/13565)
+#
+  issues: write
+
+# This allows a subsequently queued workflow run to interrupt/wait for previous runs
+concurrency:
+  group: '${{ github.workflow }}'
+  cancel-in-progress: false         # true = interrupt, false = wait
+
+jobs:
+
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Sync (push)
+        if: github.event_name == 'push'
+        uses: crazy-max/ghaction-github-labeler@v4
+        with:
+          yaml-file:   '.github/labels.yml'
+          dry-run:     false    # false = apply changes
+          skip-delete: true     # the least destructive case
+
+      - name: Sync (PR test)
+        if: github.event_name == 'pull_request'
+        uses: crazy-max/ghaction-github-labeler@v4
+        with:
+          yaml-file:   '.github/labels.yml'
+          dry-run:     true    # true = only test
+          skip-delete: true    # the least destructive case
+
+      - name: Sync (manual)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run == 'false'
+        uses: crazy-max/ghaction-github-labeler@v4
+        with:
+          yaml-file:   '.github/labels.yml'
+          dry-run:     false    # false = apply changes
+          skip-delete: ${{ github.event.inputs.skip-delete != 'false' }}
+
+      - name: Sync (manual test)
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run != 'false'
+        uses: crazy-max/ghaction-github-labeler@v4
+        with:
+          yaml-file:   '.github/labels.yml'
+          dry-run:     true    # true = only test
+          skip-delete: ${{ github.event.inputs.skip-delete != 'false' }}
