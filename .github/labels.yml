@@ -48,3 +48,19 @@
 - name: "📌 pinned"
   description: "Issues that are pinned currently"
   color: "0e8a16"
+
+#
+# stale-*.yml
+#
+
+- name: "stale"
+  description: "Issues/PRs that have not had recent interaction (Out-of-Date)"
+  color: "333333"
+- name: "stale: closed"
+  description: "Issues/PRs closed after don't have recent interaction (Out-of-Date)"
+  color: "333333"
+
+- name: "keep"
+  description: "Issues/PRs exempt to be staled"
+  color: "0e8a16"
+

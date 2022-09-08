@@ -1,0 +1,140 @@
+name: Stale issues handler
+
+on:
+  push:                                      # when push this files to branches....
+    branches:
+      - 'main'
+    paths:
+      - '.github/workflows/stale-issues.yml' #  - this workflow
+  workflow_dispatch:                         # manually
+    inputs:
+      debug-only:
+        type: boolean
+        description: 'If enabled, debug mode is on and then API calls that can alter your issues will not happen'
+        required: true
+        default: true
+#  schedule:                                  # or
+#    - cron: "0 0,6,12,18 * * *"              # every 6 hour at o'clock
+
+permissions:
+  # no checkout/branching needed
+  contents: none
+  # 'actions/stale' needs labels and comments CRUD management
+  issues: write
+
+# This allows a subsequently queued workflow run to interrupt/wait for previous runs
+concurrency:
+  group: '${{ github.workflow }}'
+  cancel-in-progress: false  # true: interrupt, false = wait for
+
+jobs:
+  stale:
+    name: Stale issues
+    runs-on: ubuntu-latest
+    outputs:
+      # "XXX-len": the length of the "XXX" output object
+      staled:     ${{ steps.set-staled.outputs.items }}
+      staled-len: ${{ steps.set-staled.outputs.items-len }}
+      closed:     ${{ steps.set-closed.outputs.items }}
+      closed-len: ${{ steps.set-closed.outputs.items-len }}
+    steps:
+      - uses: actions/stale@v5
+        id: stale
+        with:
+          debug-only: ${{ github.event.inputs.debug-only == 'true' }}
+          operations-per-run: 30
+          days-before-stale: 1
+          days-before-close: 1
+          ignore-updates: false
+          remove-stale-when-updated: true
+          stale-issue-label: "stale"
+          close-issue-label: "stale: closed"
+          stale-issue-message: |
+            This issue has been automatically marked as stale because it has not had recent activity during last 60 days :sleeping:
+
+            It will be closed in 30 days if no further activity occurs. To unstale this issue, remove stale label or add a comment with a detailed explanation.
+
+            There can be many reasons why some specific issue has no activity. The most probable cause is lack of time, not lack of interest.
+
+            Thank you for your patience :heart:
+          close-issue-message: |
+            This issue has been automatically closed because it has been inactive during the last 30 days since being marked as stale.
+
+            As author or maintainer, it can always be reopened if you see that carry on been useful.
+
+            Anyway, thank you for your interest in contribute :heart:
+          close-issue-reason: not_planned
+          exempt-issue-labels: "blocked,must,should,keep,📌 pinned"
+          # disable PR processing at all (this job is for treat issues)
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          ignore-pr-updates: true
+          remove-pr-stale-when-updated: false
+          stale-pr-label: " "
+
+      - name: Print outputs
+        run: echo ${{ join(steps.stale.outputs.*, ',') }}
+
+      ## Removing private properties from each JSON object and compute array length
+      ## TODO: Delete these set-* workarounds when resolve actions/stale#806 ?
+      - name: Set staled
+        id: set-staled
+        run: |
+          echo $INPUT_JSON  \
+            | jq --compact-output --raw-output 'del(.[] | .[to_entries[] | .key | select(startswith("_"))])'  \
+            | sed -e 's/^/::set-output name=items::/'
+          echo $INPUT_JSON  \
+            | jq --raw-output '. | length'  \
+            | sed -e 's/^/::set-output name=items-len::/'
+        env:
+          INPUT_JSON: ${{ steps.stale.outputs.staled-issues-prs }}
+      - name: Set closed
+        id: set-closed
+        run: |
+          echo $INPUT_JSON  \
+            | jq --compact-output --raw-output 'del(.[] | .[to_entries[] | .key | select(startswith("_"))])'  \
+            | sed -e 's/^/::set-output name=items::/'
+          echo $INPUT_JSON  \
+            | jq --raw-output '. | length'  \
+            | sed -e 's/^/::set-output name=items-len::/'
+        env:
+          INPUT_JSON: ${{ steps.stale.outputs.closed-issues-prs }}
+
+      - name: Write job summary
+        run: |
+          echo "### Staled"  \
+            >> $GITHUB_STEP_SUMMARY
+          # render json array to a Markdown table with an optional "No records" message if empty
+          echo "$STALED"  \
+            | jq --raw-output 'map("| [#\(.number)](\(env.GITHUB_PUBLIC_URL)/\(.number)) | \(.title) |") | join("\n") | if (. == "") then "\nNo records.\n" else "\n|    | Title |\n|---:|:------|\n\(.)\n" end'  \
+            >> $GITHUB_STEP_SUMMARY
+
+          echo "### Closed"  \
+            >> $GITHUB_STEP_SUMMARY
+          # render json array to a Markdown table with an optional "No records" message if empty
+          echo "$CLOSED"  \
+            | jq --raw-output 'map("| [#\(.number)](\(env.GITHUB_PUBLIC_URL)/\(.number)) | \(.title) |") | join("\n") | if (. == "") then "\nNo records.\n" else "\n|    | Title |\n|---:|:------|\n\(.)\n" end'  \
+            >> $GITHUB_STEP_SUMMARY
+        env:
+          GITHUB_PUBLIC_URL: ${{ format('{0}/{1}/issues', github.server_url, github.repository) }}
+          STALED: ${{ steps.set-staled.outputs.items }}
+          CLOSED: ${{ steps.set-closed.outputs.items }}
+
+  on-close-label-cleanup:
+    name: "Clean labels on close #${{ matrix.value.number }}"
+    if: ${{ fromJSON(needs.stale.outputs.closed-len) > 0 }}
+    needs: [stale]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        value: ${{ fromJSON(needs.stale.outputs.closed) }}
+      max-parallel: 10    # max number of spawned jobs that can be in progress
+      fail-fast:    false # don't cancel other spawned matrix jobs
+    steps:
+      - name: Remove stale labels
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          repo:   ${{ github.repository }}
+          number: ${{ matrix.value.number }}
+          labels: |
+            stale
