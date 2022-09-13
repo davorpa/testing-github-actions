@@ -123,7 +123,7 @@ jobs:
 
   on-close-label-cleanup:
     name: "Clean labels on close #${{ matrix.value.number }}"
-    if: ${{ fromJSON(needs.stale.outputs.closed-len) > 0 }}
+    if: ${{ github.event.inputs.debug-only != 'true' && fromJSON(needs.stale.outputs.closed-len) > 0 }}
     needs: [stale]
     runs-on: ubuntu-latest
     strategy:
