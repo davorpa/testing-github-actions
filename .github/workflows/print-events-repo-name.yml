@@ -25,8 +25,6 @@ jobs:
     steps:
       - name: Cancel Previous Workflows
         uses: styfle/cancel-workflow-action@0.10.1
-        with:
-          access_token: ${{ github.token }}
 
   print-cwd:
     name: Print CWD

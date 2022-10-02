@@ -40,8 +40,6 @@ jobs:
     steps:
       - name: Cancel Previous Redundant Builds
         uses: styfle/cancel-workflow-action@0.10.1
-        with:
-          access_token: ${{ github.token }}
 
   build-created-react-app:
     name: Node ${{ matrix.node_version }} ${{ matrix.architecture }} on ${{ matrix.os }}
