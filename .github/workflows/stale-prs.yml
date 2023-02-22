@@ -100,7 +100,7 @@ jobs:
             >> $GITHUB_OUTPUT
           echo $INPUT_JSON  \
             | jq --raw-output '. | length'  \
-            | sed -e 's/^/name=items-len=/'  \
+            | sed -e 's/^/items-len=/'  \
             >> $GITHUB_OUTPUT
         env:
           INPUT_JSON: ${{ steps.stale.outputs.closed-issues-prs }}
