@@ -82,10 +82,12 @@ jobs:
         run: |
           echo $INPUT_JSON  \
             | jq --compact-output --raw-output 'del(.[] | .[to_entries[] | .key | select(startswith("_"))])'  \
-            | sed -e 's/^/::set-output name=items::/'
+            | sed -e 's/^/items=/'  \
+            >> $GITHUB_OUTPUT
           echo $INPUT_JSON  \
             | jq --raw-output '. | length'  \
-            | sed -e 's/^/::set-output name=items-len::/'
+            | sed -e 's/^/items-len=/'  \
+            >> $GITHUB_OUTPUT
         env:
           INPUT_JSON: ${{ steps.stale.outputs.staled-issues-prs }}
       - name: Set closed
@@ -93,10 +95,12 @@ jobs:
         run: |
           echo $INPUT_JSON  \
             | jq --compact-output --raw-output 'del(.[] | .[to_entries[] | .key | select(startswith("_"))])'  \
-            | sed -e 's/^/::set-output name=items::/'
+            | sed -e 's/^/items=/'  \
+            >> $GITHUB_OUTPUT
           echo $INPUT_JSON  \
             | jq --raw-output '. | length'  \
-            | sed -e 's/^/::set-output name=items-len::/'
+            | sed -e 's/^/items-len=/'  \
+            >> $GITHUB_OUTPUT
         env:
           INPUT_JSON: ${{ steps.stale.outputs.closed-issues-prs }}
 

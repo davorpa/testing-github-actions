@@ -73,7 +73,9 @@ jobs:
     steps:
       - name: Fetch repository name
         id: repository-name
-        run: echo "::set-output name=value::$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')"
+        run: |
+          echo "value=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')"  \
+            >> $GITHUB_OUTPUT
       - name: Print
         env:
           GH_REPOSITORY_NAME: ${{ steps.repository-name.outputs.value }}
@@ -90,7 +92,9 @@ jobs:
         # Error: The `set-env` command is disabled. Please upgrade to using Environment Files or opt into unsecure command execution by setting the `ACTIONS_ALLOW_UNSECURE_COMMANDS` environment variable to `true`.
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: ${{ true }}
-        run: echo "::set-env name=GH_REPOSITORY_NAME::$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e 's/:refs//')"
+        run: |
+          echo "GH_REPOSITORY_NAME=$(echo "$GITHUB_REPOSITORY" | awk -F / '{print $2}' | sed -e 's/:refs//')"  \
+            >> $GITHUB_ENV
       - name: Print
         run: |
           echo -e "$GH_REPOSITORY_NAME"
@@ -101,7 +105,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fetch repository name
-        run: echo "GH_REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')" >> $GITHUB_ENV
+        run: |
+          echo "GH_REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}' | sed -e 's/:refs//')"  \
+            >> $GITHUB_ENV
 #        shell: bash
       - name: Print
         run: |

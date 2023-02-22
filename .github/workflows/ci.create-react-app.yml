@@ -57,8 +57,9 @@ jobs:
 #          - windows-latest
         node_version:
 #          - 12.x
-          - 14.x
-#          - 16.x
+#          - 14.x
+          - 16.x
+#          - 18.x
         architecture:
           - x64
 #        # an extra windows-x86 run:
@@ -88,7 +89,7 @@ jobs:
           check-latest:    true
           # zero-config caching available using setup-node@v2
 #          cache:           'npm'
-        
+
       - name: Echo. node version
         run: node --version
       - name: Echo. npm version
@@ -105,7 +106,8 @@ jobs:
       - name: Determine npm cache directory
         id:   npm-cache-dir
         run:  |
-          echo "::set-output name=dir::$(npm config get cache)"
+          echo "dir=$(npm config get cache)"  \
+            >> $GITHUB_OUTPUT
 
       - name: Handle npm cache
         uses: actions/cache@v3
