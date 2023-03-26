@@ -38,7 +38,7 @@ jobs:
       closed:     ${{ steps.set-closed.outputs.items }}
       closed-len: ${{ steps.set-closed.outputs.items-len }}
     steps:
-      - uses: actions/stale@v7
+      - uses: actions/stale@v8
         id: stale
         with:
           debug-only: ${{ github.event.inputs.debug-only == 'true' }}
