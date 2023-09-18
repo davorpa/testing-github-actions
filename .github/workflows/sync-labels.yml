@@ -54,7 +54,7 @@ jobs:
 
       - name: Sync (push)
         if: github.event_name == 'push'
-        uses: crazy-max/ghaction-github-labeler@v4
+        uses: crazy-max/ghaction-github-labeler@v5
         with:
           yaml-file:   '.github/labels.yml'
           dry-run:     false    # false = apply changes
@@ -62,7 +62,7 @@ jobs:
 
       - name: Sync (PR test)
         if: github.event_name == 'pull_request'
-        uses: crazy-max/ghaction-github-labeler@v4
+        uses: crazy-max/ghaction-github-labeler@v5
         with:
           yaml-file:   '.github/labels.yml'
           dry-run:     true    # true = only test
@@ -70,7 +70,7 @@ jobs:
 
       - name: Sync (manual)
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run == 'false'
-        uses: crazy-max/ghaction-github-labeler@v4
+        uses: crazy-max/ghaction-github-labeler@v5
         with:
           yaml-file:   '.github/labels.yml'
           dry-run:     false    # false = apply changes
@@ -78,7 +78,7 @@ jobs:
 
       - name: Sync (manual test)
         if: github.event_name == 'workflow_dispatch' && github.event.inputs.dry-run != 'false'
-        uses: crazy-max/ghaction-github-labeler@v4
+        uses: crazy-max/ghaction-github-labeler@v5
         with:
           yaml-file:   '.github/labels.yml'
           dry-run:     true    # true = only test
