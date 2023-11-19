@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Echo. Cwd - Working Directory
-        uses: actions/github-script@v5
+        uses: actions/github-script@v7
         with:
           result-encoding: string
           script: |
